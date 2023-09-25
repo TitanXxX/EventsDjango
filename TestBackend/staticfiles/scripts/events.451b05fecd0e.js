@@ -79,6 +79,7 @@ function ADD_EVENT() {
 
 function VIEW_EVENT(click_id) {
 	var event, member, me_in;
+	console.log(click_id);
 	event_window.style.display = "none";
 	if(click_id !== undefined) {
 		selected = click_id;
@@ -279,6 +280,14 @@ function UPDATER(){
 
 UPDATER();
 let updater = setInterval(UPDATER, 30000);
+
+content.setAttribute("style", "height: " + content.scrollHeight + "px; overflow-y: hidden;");
+content.addEventListener("input", TEXTAREA, false);
+
+function TEXTAREA(){
+	this.style.height = "auto";
+	this.style.height = (this.scrollHeight) + "px";
+}
 
 
 

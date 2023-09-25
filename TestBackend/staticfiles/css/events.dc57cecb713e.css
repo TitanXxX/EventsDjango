@@ -81,7 +81,6 @@
 	border-radius: 20px 0 0 20px;
 	margin: 4px 0 4px 0;
 	overflow-y: scroll;
-	overflow-x: hidden;
 	top: 5px;
 	float: right;
 }
@@ -92,14 +91,14 @@
 	border-radius: 10px;
 }
 #event_window::-webkit-scrollbar-thumb {
-	background: var(--main-bg-color);
+	background: RGB(0,220,200);
 	border-radius: 10px;
 }
 
 .title {
 	position: relative;
 	display: block;
-	width: 95%;
+	width: 100%;
 	height: auto;
 	overflow: hidden;
 	text-align: left;
@@ -116,7 +115,8 @@
 	display: block;
 	width: 95%;
 	height: auto;
-	min-height: 450px;
+	min-height: 100px;
+	overflow: hidden;
 	text-align: left;
 	font-size: var(--font-size-base);
 	padding: 10px;
@@ -124,8 +124,7 @@
 	border: none;
 	border-radius: 20px;
 	background-color: var(--second-bg-color);
-	overflow-y: scroll;
-	resize: none;
+	overflow: hidden;
 }
 #date {
 	position: relative;

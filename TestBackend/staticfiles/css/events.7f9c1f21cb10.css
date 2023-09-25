@@ -116,7 +116,8 @@
 	display: block;
 	width: 95%;
 	height: auto;
-	min-height: 450px;
+	min-height: 100px;
+	overflow: hidden;
 	text-align: left;
 	font-size: var(--font-size-base);
 	padding: 10px;
@@ -124,7 +125,7 @@
 	border: none;
 	border-radius: 20px;
 	background-color: var(--second-bg-color);
-	overflow-y: scroll;
+	overflow: hidden;
 	resize: none;
 }
 #date {
