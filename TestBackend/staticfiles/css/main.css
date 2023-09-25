@@ -1,0 +1,170 @@
+@import url('https://fonts.googleapis.com/css2?family=Poppins&display=swap');
+:root {
+	--main-bg-color: RGB(14, 18, 27);
+	--second-bg-color: RGB(212,212,212);
+	--input-bg-color: RGB(167,167,167);
+
+	--main-color: RGB(0, 0, 0);
+
+	--hover-bg-color: RGB(77,77,77);
+	--outline-color: RGB(35,36,30);
+	--opacity: 80%;
+
+	--bad-message-color: RGB(200, 100, 100);
+	--neutral-message-color: RGB(127, 127, 127);
+	--good-message-color: RGB(100, 200, 100);
+
+	--font-size-base: 24px;
+	--font-size-title: 42px;
+}
+* {
+	margin: 0;
+	padding: 0;
+	font-family: 'Poppins', sans-serif;
+	font-weight: 400;
+}
+html, body {
+	display: block;
+	position: relative;
+	margin: 0;
+	line-height: normal;
+	background: var(--main-bg-color);
+	color: var(--main-color);
+	min-width: calc(100vw - 10px);
+	width: auto;
+	min-height: 100vh;
+	height: auto;
+}
+@font-face{
+	font-display: swap;
+}
+::-webkit-scrollbar {
+	width: 10px;
+}
+::-webkit-scrollbar-track {
+	background: var(--second-bg-color);
+}
+::-webkit-scrollbar-thumb {
+	background: var(--main-color);
+	border-radius: 10px;
+}
+
+.topnav {
+	background-color: var(--second-bg-color);
+	overflow: hidden;
+	border-radius: 0 0 20px 20px;
+	text-align: center;
+	line-height: 40px;
+	height: 50px;
+}
+.topnav a::after{
+	content: "";
+	position: absolute;
+	left: 0;
+	width: 100%;
+	height: 3px;
+	background: var(--main-color);
+	border-radius: 3px;
+	transform: scaleX(0);
+	transition: transform .5s;
+}
+.topnav a:hover::after{
+	transform: scaleX(1);
+}
+.topnav a {
+	position: relative;
+	margin-left: 10px;
+	float: left;
+	color: var(--main-color);
+	padding: 5px 16px;
+	font-size: 1.4em;
+	text-decoration: none;
+	height: 40px;
+	user-select: none;
+}
+.topnav a.active {
+	background-color: #4CAF50;
+	color: var(--main-color);
+}
+
+.footer {
+	padding: 10px;
+	background-color: var(--second-bg-color);
+	border-radius: 20px;
+	color: var(--second-color);
+	font-size: 1em;
+}
+
+#username {
+	float: left;
+	width: 100px;
+	font-size: 32px;
+}
+
+.display {
+	position: relative;
+	display: flex;
+	width: 100%;
+	height: calc(100vh - 100px);
+	overflow: hidden;
+	font-size: var(--font-size-base);
+	justify-content:  space-between;
+}
+
+
+[data-title]::after {
+	display: flex;
+	position: absolute;
+	content: attr(data-title);
+	color: var(--main-color);
+	font-size: 1.4em;
+	line-height: 1.4em;
+	float: top;
+	z-index: 100;
+	background: var(--main-bg-color);
+	color: var(--main-color);
+	border: 1px solid var(--main-color);
+	padding: 4px;
+	border-radius: 10px;
+	opacity: 0;
+	transition: opacity .2s;
+	pointer-events: none;
+}
+[data-title]:hover:after {
+	opacity: 1;
+}
+
+#SiteMessages {
+	display: block;
+	position: fixed;
+	z-index: 100;
+	width: 30%;
+	height: auto;
+	right: 0;
+	top: 0;
+}
+
+.SiteMessage {
+	display: block;
+	position: relative;
+	width: calc(100% - 20px);
+	height: auto;
+	border-radius: 20px;
+	padding: 10px;
+	margin-bottom: 4px;
+	font-size: var(--font-size-base);
+	color: var(--second-color);
+	background-color: var(--neutral-message-color);
+}
+
+
+
+
+
+
+
+
+
+
+
+

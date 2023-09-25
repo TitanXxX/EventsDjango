@@ -1,0 +1,37 @@
+{% load static %}
+{% include "upper.html" %}
+<link rel="stylesheet" href="{% static 'css/events.css' %}">
+
+<div class="events_scroll Flipped">
+	<div class="group_title" id="title_all">Все события</div>
+	<div class="group" id="group_all">
+	</div>
+	<div class="group_title" id="title_my">Мои события</div>
+	<div class="group" id="group_my">
+	</div>
+	<div class="group" style="border: none">
+		<div class="event" id="add_event_btn" onclick="ADD_EVENT()">Добавить</div>
+	</div>
+</div>
+<div id="event_window">
+	<input type="text" class="title" id="title" maxlength="128" value="Название" required>
+	<textarea type="text" id="content" maxlength="512" required>Контент</textarea>
+	<div id="date">дата</div>
+	<br>
+	<div class="title" id="title_members">Участники</div>
+	<div id="members">
+	</div>
+	<br>
+	<div class="ActionButtons">
+		<div class="ActionButton" id="add_event">Добавить событие</div>
+		<div class="ActionButton" id="del_event">Удалить событие</div>
+		<!--div class="ActionButton" id="edit_event">Изменить событие</div-->
+		<div class="ActionButton" id="add_member">Принять участие</div>
+		<div class="ActionButton" id="del_member">Отклонить участие</div>
+	</div>
+</div>
+<script src="{% static 'scripts/events.js' %}"></script>
+
+{% include "lower.html" %}
+
+

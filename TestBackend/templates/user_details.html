@@ -1,0 +1,16 @@
+{% load static %}
+{% include "upper.html" %}
+<link rel="stylesheet" href="{% static 'css/action.css' %}">
+
+<div class="action_form">
+	<label>ID</label>
+	<input type="text" class="input-box" value="{{id}}" readonly="readonly">
+	<label>Логин</label>
+	<input type="text" class="input-box" value="{{login}}" readonly="readonly">
+	<label>Имя</label>
+	<input type="text" class="input-box" value="{{name}}" readonly="readonly">
+	<label>Фамилия</label>
+	<input type="text" class="input-box" value="{{lastname}}" readonly="readonly">
+</div>
+
+{% include "lower.html" %}

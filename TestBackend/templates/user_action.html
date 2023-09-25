@@ -1,0 +1,98 @@
+{% load static %}
+{% include "upper.html" %}
+<script type="text/javascript">
+	function ACTION() {
+		var data = {};
+		if (login.value && password.value) {
+			data["login"] = login.value;
+			data["password"] = password.value;
+			if(name.value && lastname.value) {
+				data["name"] = name.value;
+				data["lastname"] = lastname.value;
+				$.ajax({
+					url: REG_URL,
+					type: "POST",
+					beforeSend: function(request){
+						request.setRequestHeader("X-CSRFToken", getCookie("csrftoken"));
+					},
+					mode: "same-origin",
+					data: data,
+					dataType: "json",
+					success: function(response) {
+							if(response.error === null) {
+								create_message(1, "Успешная авторизация");
+								window.location.href = MAIN_WEB_URL;
+							} else {
+								create_message(-1, "Ошибка:", response.error);
+							}
+					},
+					error: function(response) {
+						create_message(-1, "Ошибка при регистрации:", response);
+					}
+				});
+			} else {
+				LOGIN(data);
+			}
+		} else {
+			create_message(-1, "Поля логина и пароля должны быть заполнены");
+		}
+	}
+	function ISLOGIN(){
+		if (login.value && password.value) {
+			regform.style.display="block";
+			if(name.value && lastname.value) {
+				actionbutton.value = "Регистрация";
+				actionbutton.style.display="block";
+			} else {
+				actionbutton.value = "Войти";
+				actionbutton.style.display="block";
+			}
+		} else {
+			regform.style.display="none";
+			actionbutton.value = "Войти";
+			actionbutton.style.display="none";
+		}
+	}
+</script>
+
+<link rel="stylesheet" href="{% static 'css/action.css' %}">
+
+<form class="action_form" action="javascript:ACTION()" accept-charset="UTF-8">
+	<label for="reg_login">Логин</label>
+	<input type="text" class="input-box" id="reg_login" minlength="2" autocomplete="username" maxlength="64" value="" required>
+	
+	<label for="reg_password">Пароль</label>
+	<input type="password" class="input-box" id="reg_password" autocomplete="new-password" minlength="2" maxlength="255" value="" required>
+
+	<div id="reg_form">
+		<label for="reg_name">Имя</label>
+		<input type="text" class="input-box" id="reg_name" autocomplete="name" minlength="1" maxlength="64" value="">
+		
+		<label for="reg_lastname">Фамилия</label>
+		<input type="text" class="input-box" id="reg_lastname" autocomplete="family-name" minlength="1" maxlength="64" value="">
+	</div>
+	<input type="submit" value="Войти" id="ActionButton" class="action-btn">
+</form>
+<script type="text/javascript">
+	const login = document.getElementById("reg_login");
+	const password = document.getElementById("reg_password");
+
+	const name = document.getElementById("reg_name");
+	const lastname = document.getElementById("reg_lastname");
+	
+	
+	const actionbutton = document.getElementById("ActionButton");
+
+	const regform = document.getElementById("reg_form");
+	regform.style.display="none";
+	actionbutton.style.display="none";
+	const inputHandler = function(e) {
+		ISLOGIN()
+	}
+	const fields = [login, password, name, lastname];
+	for (var i = 0; i < 4; i++) {
+		fields[i].addEventListener("input", inputHandler);
+		fields[i].addEventListener("propertychange", inputHandler);
+	}
+</script>
+{% include "lower.html" %}
