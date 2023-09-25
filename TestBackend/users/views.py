@@ -36,7 +36,7 @@ class UserDetailAPI(APIView):
 
 class UserAPI(APIView):
 	#permission_classes = [IsAuthenticated]
-	#permission_classes = [AllowAny]
+	permission_classes = [AllowAny]
 	#authentication_classes = (TokenAuthentication,)
 	
 	def post(self, request, *args, **kwargs):
