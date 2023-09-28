@@ -1,0 +1,17 @@
+[tool.poetry]
+name = "eventsdjango"
+version = "0.1.1"
+description = ""
+authors = ["TitanX <sergey_gusev_007@mail.ru>"]
+readme = "README.md"
+
+[tool.poetry.dependencies]
+python = "^3.8"
+django = "^4.2.5"
+djangorestframework = "^3.14.0"
+whitenoise = "^6.5.0"
+
+
+[build-system]
+requires = ["poetry-core"]
+build-backend = "poetry.core.masonry.api"
