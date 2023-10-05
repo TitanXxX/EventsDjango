@@ -9,27 +9,24 @@
 			if(name.value && lastname.value) {
 				data["name"] = name.value;
 				data["lastname"] = lastname.value;
-				$.ajax({
-					url: REG_URL,
-					type: "POST",
-					beforeSend: function(request){
-						request.setRequestHeader("X-CSRFToken", getCookie("csrftoken"));
+				fetch(REG_URL, {
+					method: "POST",
+					body: JSON.stringify({}),
+					headers: {
+						"Content-type": "application/json; charset=UTF-8",
+						"X-CSRFToken": getCookie("csrftoken"),
+						"Authorization": getCookie("Token"),
 					},
-					mode: "same-origin",
-					data: data,
-					dataType: "json",
-					success: function(response) {
-							if(response.error === null) {
-								create_message(1, "Успешная авторизация");
-								window.location.href = MAIN_WEB_URL;
-							} else {
-								create_message(-1, "Ошибка:", response.error);
-							}
-					},
-					error: function(response) {
-						create_message(-1, "Ошибка при регистрации:", response);
-					}
-				});
+				})
+				.then((response) => response.json())
+				.then((response) => {
+					if(response.error !== null) throw Error(response.error);
+					create_message(1, "Успешная авторизация");
+					window.location.href = MAIN_WEB_URL;
+				})
+				.catch((err) => {
+					create_message(-1, "Ошибка при регистрации:", err.message);
+				})
 			} else {
 				LOGIN(data);
 			}

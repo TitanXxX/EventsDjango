@@ -24,7 +24,7 @@ function create_message(good, ...text){
 	var message = document.createElement("div");
 	message.setAttribute("class","SiteMessage");
 	message.innerHTML = "";
-	for (item in text){
+	for (item in text) {
 		message.innerHTML += text[item]
 	}
 	message.style = "background-color: color-mix(in srgb, " + colors[good + 1] + " var(--opacity), transparent);";
@@ -50,43 +50,36 @@ function LOGIN(DATA) {
 		login_el.style.display="block";
 		return 1;
 	}
-	$.ajax({
-		url: LOGIN_URL,
-		type: "POST",
-		beforeSend: function(request){
-			request.setRequestHeader("X-CSRFToken", getCookie("csrftoken"));
-			if($.isEmptyObject(data)) request.setRequestHeader("Authorization", getCookie("Token"));
+	fetch(LOGIN_URL, {
+		method: "POST",
+		body: JSON.stringify(data),
+		headers: {
+			"Content-type": "application/json; charset=UTF-8",
+			"X-CSRFToken": getCookie("csrftoken"),
+			"Authorization": getCookie("Token"),
 		},
-		mode: "same-origin",
-		data: data,
-		dataType: "json",
-		success: function(response) {
-				login_el.style.display = "none";
-				logout_el.style.display = "none";
-				username_el.style.display = "none";
-				if(response.error === null) {
-					ID = response.result.user.id;
-					username_el.innerHTML = response.result.user.name;
-					username_el.style.display = "block";
-					username_el.href = DETAILS_WEB_URL.slice(0, DETAILS_WEB_URL.length - 2) + ID;
-					document.cookie = "Token=" + encodeURIComponent("Token " + response.result.token) + "; path=/; secure; max-age=31536000";
-					logout_el.style.display = "block";
-					create_message(1, "Успешная авторизация");
-					if(!$.isEmptyObject(data)) {
-						window.location.href = MAIN_WEB_URL;
-					}
-				} else {
-					create_message(-1, "Ошибка:", response.error);
-					login_el.style.display = "block";
-				}
-		},
-		error: function(response) {
-			create_message(-1, "Ошибка при входе:", response);
-			login_el.style.display="block";
-			logout_el.style.display="none";
-			username_el.style.display="none";
-		}
-	});
+	})
+	.then((response) => response.json())
+	.then((response) => {
+		if(response.error !== null) throw Error(response.error);
+		login_el.style.display = "none";
+		logout_el.style.display = "none";
+		username_el.style.display = "none";
+		ID = response.result.user.id;
+		username_el.innerHTML = response.result.user.name;
+		username_el.style.display = "block";
+		username_el.href = DETAILS_WEB_URL.slice(0, DETAILS_WEB_URL.length - 2) + ID;
+		document.cookie = "Token=" + encodeURIComponent("Token " + response.result.token) + "; path=/; secure; max-age=31536000";
+		logout_el.style.display = "block";
+		create_message(1, "Успешная авторизация");
+		if(!$.isEmptyObject(data)) window.location.href = MAIN_WEB_URL;
+	})
+	.catch((err) => {
+		create_message(-1, "Ошибка при входе:", err.message);
+		login_el.style.display="block";
+		logout_el.style.display="none";
+		username_el.style.display="none";
+	})
 }
 
 function LOGOUT() {
@@ -97,35 +90,30 @@ function LOGOUT() {
 		login_el.style.display="block";
 		return 1;
 	}
-	$.ajax({
-		url: LOGIN_URL,
-		type: "DELETE",
-		beforeSend: function(request){
-			request.setRequestHeader("X-CSRFToken", getCookie("csrftoken"));
-			request.setRequestHeader("Authorization", getCookie("Token"));
+	fetch(LOGIN_URL, {
+		method: "DELETE",
+		body: JSON.stringify({}),
+		headers: {
+			"Content-type": "application/json; charset=UTF-8",
+			"X-CSRFToken": getCookie("csrftoken"),
+			"Authorization": getCookie("Token"),
 		},
-		mode: "same-origin",
-		data: {},
-		dataType: "json",
-		success: function(response) {
-				login_el.style.display="none";
-				logout_el.style.display="none";
-				username_el.style.display="none";
-				if(response.error === null) {
-					document.cookie = "Token=Token; path=/; secure; max-age=0";
-					login_el.style.display="block";
-					create_message(1, "Успешный выход");
-					window.location.href = LOGIN_WEB_URL;
-				} else {
-					create_message(-1, "Ошибка:", response.error);
-					logout_el.style.display="block";
-				}
-		},
-		error: function(response) {
-			create_message(-1, "Ошибка при выходе:", response);
-			login_el.style.display="none";
-			logout_el.style.display="block";
-			username_el.style.display="none";
-		}
-	});
+	})
+	.then((response) => response.json())
+	.then((response) => {
+		if(response.error !== null) throw Error(response.error);
+		login_el.style.display="none";
+		logout_el.style.display="none";
+		username_el.style.display="none";
+		document.cookie = "Token=Token; path=/; secure; max-age=0";
+		login_el.style.display="block";
+		create_message(1, "Успешный выход");
+		window.location.href = LOGIN_WEB_URL;
+	})
+	.catch((err) => {
+		create_message(-1, "Ошибка при выходе:", err.message);
+		login_el.style.display="none";
+		logout_el.style.display="block";
+		username_el.style.display="none";
+	})
 }

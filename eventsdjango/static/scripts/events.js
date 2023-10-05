@@ -21,54 +21,44 @@ const btn_del_member = document.getElementById("del_member");
 
 function GET_USER_INFO(id, place){
 	data = {"id": id};
-	$.ajax({
-		url: DETAILS_URL,
-		type: "POST",
-		beforeSend: function(request){
-			request.setRequestHeader("X-CSRFToken", getCookie("csrftoken"));
-			request.setRequestHeader("Authorization", getCookie("Token"));
+	fetch(DETAILS_URL, {
+		method: "POST",
+		body: JSON.stringify(data),
+		headers: {
+			"Content-type": "application/json; charset=UTF-8",
+			"X-CSRFToken": getCookie("csrftoken"),
+			"Authorization": getCookie("Token"),
 		},
-		mode: "same-origin",
-		data: data,
-		dataType: "json",
-		success: function(response) {
-				if(response.error === null) {
-					place.innerHTML = response.result.lastname + " " + response.result.name;
-					place.href = DETAILS_WEB_URL.slice(0, DETAILS_WEB_URL.length - 2) + response.result.id;
-				} else {
-					create_message(-1, "Ошибка при проверке участника:", response.error);
-				}
-		},
-		error: function(response) {
-			create_message(-1, "Ошибка при проверке участника:", response);
-		}
-	});
+	})
+	.then((response) => response.json())
+	.then((response) => {
+		if(response.error !== null) throw Error(response.error);
+		place.innerHTML = response.result.lastname + " " + response.result.name;
+		place.href = DETAILS_WEB_URL.slice(0, DETAILS_WEB_URL.length - 2) + response.result.id;
+	})
+	.catch((err) => {
+		create_message(-1, "Ошибка при проверке участника:", err.message);
+	})
 }
 
 function UPDATE_EVENTS() {
-	var data = {};
-	$.ajax({
-		url: EVENTS_LIST_URL,
-		type: "GET",
-		beforeSend: function(request){
-			request.setRequestHeader("X-CSRFToken", getCookie("csrftoken"));
-			request.setRequestHeader("Authorization", getCookie("Token"));
+	fetch(EVENTS_LIST_URL, {
+		method: "GET",
+		headers: {
+			"Content-type": "application/json; charset=UTF-8",
+			"X-CSRFToken": getCookie("csrftoken"),
+			"Authorization": getCookie("Token"),
 		},
-		mode: "same-origin",
-		data: data,
-		dataType: "json",
-		success: function(response) {
-				if(response.error === null) {
-					events = response.result;
-					REFRESH_EVENTS();
-				} else {
-					create_message(-1, "Ошибка при получении событий:", response.error);
-				}
-		},
-		error: function(response) {
-			create_message(-1, "Ошибка при получении событий:", response);
-		}
-	});
+	})
+	.then((response) => response.json())
+	.then((response) => {
+		if(response.error !== null) throw Error(response.error);
+		events = response.result;
+		REFRESH_EVENTS();
+	})
+	.catch((err) => {
+		create_message(-1, "Ошибка при получении событий:", err.message);
+	})
 }
 
 function ADD_EVENT() {
@@ -80,6 +70,7 @@ function ADD_EVENT() {
 function VIEW_EVENT(click_id) {
 	var event, member, me_in;
 	event_window.style.display = "none";
+	
 	if(click_id !== undefined) {
 		selected = click_id;
 		for (i in events) {
@@ -89,6 +80,14 @@ function VIEW_EVENT(click_id) {
 		if(selected == -1) add_event_btn.classList.add("active");
 		else add_event_btn.classList.remove("active");
 	}
+	if(selected != -1) {
+		selected_exists = false;
+		for (i in events) {
+			if(events[i].id == selected) selected_exists = true;
+		}
+		if(!selected_exists) selected = null;
+	}
+
 	if(selected === null){
 		event_window.style.display = "none";
 	} else if(selected == -1){
@@ -170,103 +169,87 @@ function REFRESH_EVENTS(){
 }
 function CREATE_EVENT(e) {
 	data = {"title": title.value, "text": content.value};
-	$.ajax({
-		url: EVENTS_LIST_URL,
-		type: "POST",
-		beforeSend: function(request){
-			request.setRequestHeader("X-CSRFToken", getCookie("csrftoken"));
-			request.setRequestHeader("Authorization", getCookie("Token"));
+	fetch(EVENTS_LIST_URL, {
+		method: "POST",
+		body: JSON.stringify(data),
+		headers: {
+			"Content-type": "application/json; charset=UTF-8",
+			"X-CSRFToken": getCookie("csrftoken"),
+			"Authorization": getCookie("Token"),
 		},
-		mode: "same-origin",
-		data: data,
-		dataType: "json",
-		success: function(response) {
-				if(response.error === null) {
-					create_message(1, "Событие успешно создано");
-					UPDATE_EVENTS();
-				} else {
-					create_message(-1, "Ошибка при создании события:", response.error);
-				}
-		},
-		error: function(response) {
-			create_message(-1, "Ошибка при создании события:", response);
-		}
-	});
+	})
+	.then((response) => response.json())
+	.then((response) => {
+		if(response.error !== null) throw Error(response.error);
+		create_message(1, "Событие успешно создано");
+		UPDATE_EVENTS();
+	})
+	.catch((err) => {
+		create_message(-1, "Ошибка при создании события:", err.message);
+	})
 }
 function DELETE_EVENT(e) {
 	data = {"id": selected};
-	$.ajax({
-		url: EVENTS_LIST_URL,
-		type: "DELETE",
-		beforeSend: function(request){
-			request.setRequestHeader("X-CSRFToken", getCookie("csrftoken"));
-			request.setRequestHeader("Authorization", getCookie("Token"));
+	fetch(EVENTS_LIST_URL, {
+		method: "DELETE",
+		body: JSON.stringify(data),
+		headers: {
+			"Content-type": "application/json; charset=UTF-8",
+			"X-CSRFToken": getCookie("csrftoken"),
+			"Authorization": getCookie("Token"),
 		},
-		mode: "same-origin",
-		data: data,
-		dataType: "json",
-		success: function(response) {
-				if(response.error === null) {
-					create_message(1, "Событие успешно удалено");
-					UPDATE_EVENTS();
-				} else {
-					create_message(-1, "Ошибка при удалении события:", response.error);
-				}
-		},
-		error: function(response) {
-			create_message(-1, "Ошибка при удалении события:", response);
-		}
-	});
+	})
+	.then((response) => response.json())
+	.then((response) => {
+		if(response.error !== null) throw Error(response.error);
+		create_message(1, "Событие успешно удалено");
+		UPDATE_EVENTS();
+	})
+	.catch((err) => {
+		create_message(-1, "Ошибка при удалении события:", err.message);
+	})
 }
 function ADD_MEMBER(e) {
 	data = {"id": selected};
-	$.ajax({
-		url: EVENTS_MEMBERS_URL,
-		type: "POST",
-		beforeSend: function(request){
-			request.setRequestHeader("X-CSRFToken", getCookie("csrftoken"));
-			request.setRequestHeader("Authorization", getCookie("Token"));
+	fetch(EVENTS_MEMBERS_URL, {
+		method: "POST",
+		body: JSON.stringify(data),
+		headers: {
+			"Content-type": "application/json; charset=UTF-8",
+			"X-CSRFToken": getCookie("csrftoken"),
+			"Authorization": getCookie("Token"),
 		},
-		mode: "same-origin",
-		data: data,
-		dataType: "json",
-		success: function(response) {
-				if(response.error === null) {
-					create_message(1, "Вы успешно присоединились к событию");
-					UPDATE_EVENTS();
-				} else {
-					create_message(-1, "Ошибка при присоединении к событию:", response.error);
-				}
-		},
-		error: function(response) {
-			create_message(-1, "Ошибка при присоединении к событию:", response);
-		}
-	});
+	})
+	.then((response) => response.json())
+	.then((response) => {
+		if(response.error !== null) throw Error(response.error);
+		create_message(1, "Вы успешно присоединились к событию");
+		UPDATE_EVENTS();
+	})
+	.catch((err) => {
+		create_message(-1, "Ошибка при присоединении к событию:", err.message);
+	})
 }
 function DELETE_MEMBER(e) {
 	data = {"id": selected};
-	$.ajax({
-		url: EVENTS_MEMBERS_URL,
-		type: "DELETE",
-		beforeSend: function(request){
-			request.setRequestHeader("X-CSRFToken", getCookie("csrftoken"));
-			request.setRequestHeader("Authorization", getCookie("Token"));
+	fetch(EVENTS_MEMBERS_URL, {
+		method: "DELETE",
+		body: JSON.stringify(data),
+		headers: {
+			"Content-type": "application/json; charset=UTF-8",
+			"X-CSRFToken": getCookie("csrftoken"),
+			"Authorization": getCookie("Token"),
 		},
-		mode: "same-origin",
-		data: data,
-		dataType: "json",
-		success: function(response) {
-				if(response.error === null) {
-					create_message(1, "Вы успешно вышли из события");
-					UPDATE_EVENTS();
-				} else {
-					create_message(-1, "Ошибка при выходе из события:", response.error);
-				}
-		},
-		error: function(response) {
-			create_message(-1, "Ошибка при выходе из события:", response);
-		}
-	});
+	})
+	.then((response) => response.json())
+	.then((response) => {
+		if(response.error !== null) throw Error(response.error);
+		create_message(1, "Вы успешно вышли из события");
+		UPDATE_EVENTS();
+	})
+	.catch((err) => {
+		create_message(-1, "Ошибка при выходе из события:", err.message);
+	})
 }
 btn_add_event.addEventListener("click", CREATE_EVENT);
 btn_del_event.addEventListener("click", DELETE_EVENT);

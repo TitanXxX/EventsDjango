@@ -24,7 +24,7 @@ SECRET_KEY = secrets.token_urlsafe(40)
 #SECRET_KEY = 'django-insecure-)70$%t$1a$(72&_1^v!k2wpk-iv5+a5bd6#p#@flpe2d@jrair'
 
 # SECURITY WARNING: don't run with debug turned on in production!
-DEBUG = False
+DEBUG = True
 
 ALLOWED_HOSTS = ["127.0.0.1"]
 
